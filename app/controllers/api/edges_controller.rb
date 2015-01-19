@@ -8,7 +8,7 @@ module Api
       if @edge.save
         head :ok
       else
-        respond_with @edge.errors.messege
+        respond_with @edge.errors.messages
       end
     end
 

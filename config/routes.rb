@@ -4,6 +4,9 @@ TrafficNet::Application.routes.draw do
     resources :vertices, only: [:index, :create]
     resources :edges, only: [:index, :create]
   end
+
+  root to: 'main#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

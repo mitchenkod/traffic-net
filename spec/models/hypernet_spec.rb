@@ -48,7 +48,7 @@ describe Hypernet, type: :model do
         create :edge, outcoming_vertex: v5, incoming_vertex: v6, val: 9
       end
 
-      it 'right weights' do
+      it 'should be right weights' do
         expect(subject).to include([7, v2.id.to_s])
         expect(subject).to include([9, v3.id.to_s])
         expect(subject).to include([20, v4.id.to_s])
