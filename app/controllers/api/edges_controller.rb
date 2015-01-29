@@ -13,8 +13,15 @@ module Api
     end
 
     def index
-      @edges = Edge.all
-      respond_with @edges
+      res = Edge.all.map do |edge|
+        {id: edge.id,
+        x_1: edge.incoming_vertex.x,
+        y_1: edge.incoming_vertex.y,
+        x_2: edge.outcoming_vertex.x,
+        y_2: edge.outcoming_vertex.y,
+        }
+      end
+      respond_with res
     end
 
     private
