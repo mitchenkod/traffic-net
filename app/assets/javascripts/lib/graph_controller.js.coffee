@@ -26,29 +26,36 @@ class @GraphController
       dataType: 'json'
       success: (edges)=>
         for edge in edges
-          @edges.push {id: edge.id, x_1: edge.x_1, y_1: edge.y_1, x_2: edge.x_2, y_2: edge.y_2}
+          @edges.push {
+            id: edge.id
+            x_1: edge.x_1
+            y_1: edge.y_1
+            x_2: edge.x_2
+            y_2: edge.y_2
+            business: edge.business
+            t: edge.t
+            flow_state: edge.flow_state
+            visible: edge.visible
+          }
 
     @init_net()
 
-  new_vertex: (param1, param2)->
-    console.log param1.offsetX
-    console.log param1.offsetY
-    @canvas = ctx
-    ctx.beginPath()
-    ctx.moveTo 0, 0
-    ctx.lineTo parseInt(param1.offsetX/3), parseInt(param1.offsetY/3)
-    ctx.stroke()
-    return
 
   draw_vertex: (x, y) ->
     @canvas.beginPath()
     @canvas.arc x, y, 5, 0, 2 * Math.PI, false
     @canvas.stroke()
 
-  draw_edge: (x_1, y_1, x_2, y_2) ->
+  draw_edge: (x_1, y_1, x_2, y_2, value, state) ->
     @canvas.beginPath()
     @canvas.moveTo x_1, y_1
     @canvas.lineTo x_2, y_2
+    @canvas.fillText(value, (x_1+x_2)/2, (y_1+y_2)/2,  50);
+    switch state
+      when 'free' then color = '#00FF00'
+      when 'congested' then color = '#FFCC00'
+      when 'jam' then color = '#FF0000'
+    @canvas.strokeStyle = color
     @canvas.stroke()
     return
 
@@ -56,7 +63,8 @@ class @GraphController
     for vertex in @vertices
       @draw_vertex(vertex.x, vertex.y)
     for edge in @edges
-      @draw_edge edge.x_1, edge.y_1, edge.x_2, edge.y_2
+      if edge.visible
+        @draw_edge edge.x_1, edge.y_1, edge.x_2, edge.y_2, edge.t, edge.flow_state
 
 
 

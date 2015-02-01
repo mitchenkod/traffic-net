@@ -19,6 +19,10 @@ module Api
         y_1: edge.incoming_vertex.y,
         x_2: edge.outcoming_vertex.x,
         y_2: edge.outcoming_vertex.y,
+        business: edge.business,
+        t: edge.t_res,
+        flow_state: edge.flow_state,
+        visible: (edge.routes.count > 0)
         }
       end
       respond_with res

@@ -8,6 +8,9 @@ class Vertex
   has_many :outcoming_edges, class_name: 'Edge', inverse_of: :outcoming_vertex
   has_many :incoming_edges,  class_name: 'Edge', inverse_of: :incoming_vertex
 
+  belongs_to :source
+  has_many   :routes_outlet, class_name: 'Route', inverse_of: :outlet
+
   def weight(attr)
     try(attr)
   end
