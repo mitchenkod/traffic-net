@@ -33,10 +33,12 @@ class Hypernet
 
   def self.clean_up_routes
     Edge.each {|edge| edge.update_attribute :business, 0}
+    Source.each {|source| source.update_attribute :current_flow, source.incoming_flow}
   end
 
   def self.costs
-    Edge.all.inject(0) {|sum, edge| sum + edge.t_res*edge.business }/Edge.count
+    flow_rate = Source.all.inject(0) {|sum, source| sum + source.incoming_flow}
+    Edge.all.inject(0) {|sum, edge| sum + edge.t_res*edge.business }/flow_rate
   end
 
 
@@ -46,9 +48,10 @@ class Hypernet
 
 
   def self.compute_final_state
-    (1..100).each do |n|
+    (1..40).each do |n|
       self.iterate_flows(10)
     end
+    self.iterate_flows(300)
   end
 
 end

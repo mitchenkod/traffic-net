@@ -8,6 +8,8 @@ class Source
 
   has_many :routes
 
+  field :incoming_flow
+
   field :current_flow
 
   def min_route

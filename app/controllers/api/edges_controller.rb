@@ -14,7 +14,7 @@ module Api
 
     def index
       res = Edge.all.map do |edge|
-        {id: edge.id,
+        {id: edge.id.to_s,
         x_1: edge.incoming_vertex.x,
         y_1: edge.incoming_vertex.y,
         x_2: edge.outcoming_vertex.x,

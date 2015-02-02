@@ -4,7 +4,15 @@ module Api
     respond_to :json
 
     def index
-      @vertices = Vertex.all
+      @vertices = Vertex.all.map do |vert|
+        {
+            id: vert.id.to_s,
+            x: vert.x,
+            y: vert.y,
+            simple_id: vert.simple_id
+
+        }
+      end
       respond_with @vertices
     end
 

@@ -3,6 +3,7 @@ TrafficNet::Application.routes.draw do
   namespace :api do
     resources :vertices, only: [:index, :create]
     resources :edges, only: [:index, :create]
+    resources :routes, only: [:index]
   end
 
   root to: 'main#index'
