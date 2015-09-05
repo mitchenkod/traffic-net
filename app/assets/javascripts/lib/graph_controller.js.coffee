@@ -5,11 +5,14 @@ class @GraphController
   edges: []
   routes: []
 
+  new_vertex: (params)->
+    console.log params
+
   constructor: ->
     $('#net_here').click @new_vertex
     c=document.getElementById("net_here");
     c.width = 900
-    c.height = 450
+    c.height = 600
     ctx=c.getContext("2d");
     @canvas = ctx
     $.ajax
@@ -53,7 +56,7 @@ class @GraphController
   draw_vertex: (x, y, simple_id) ->
     @canvas.beginPath()
     @canvas.arc x, y, 5, 0, 2 * Math.PI, false
-#    @canvas.fillText(simple_id, x+10, y+10,  50);
+    @canvas.fillText(simple_id, x+10, y+10,  50);
     @canvas.stroke()
 
   draw_edge: (x_1, y_1, x_2, y_2, value, state, business) ->

@@ -34,6 +34,7 @@ class Hypernet
   def self.clean_up_routes
     Edge.each {|edge| edge.update_attribute :business, 0}
     Source.each {|source| source.update_attribute :current_flow, source.incoming_flow}
+    Edge.where(reverse_on: true).each {|edge| edge.update_attribute :reverse_on, false}
   end
 
   def self.costs
@@ -52,6 +53,38 @@ class Hypernet
       self.iterate_flows(10)
     end
     self.iterate_flows(300)
+  end
+
+
+  def self.generate_net
+    1.upto(10) do |i|
+      1.upto(10) do |j|
+       Vertex.create x: i * 50,# + (Random.rand(5) - Random.rand(40)),
+                     y: j * 50, #+ (Random.rand(5) - Random.rand(40))
+                     simple_id: i*10 + j
+      end
+    end
+
+    Vertex.each do |v|
+      -1.upto(1) do |i|
+        -1.upto(1) do |j|
+          if i != 0 && j != 0
+            up = Vertex.find_by simple_id: v.simple_id - 1 if v.simple_id % 10 != 1
+            down = Vertex.find_by simple_id: v.simple_id + 1 if v.simple_id % 10 != 0
+            left = Vertex.find_by simple_id: v.simple_id + 10 if v.simple_id < 100
+            right = Vertex.find_by simple_id: v.simple_id - 10 if v.simple_id > 20
+            Edge.create! outcoming_vertex: v, incoming_vertex: up if up
+            Edge.create! outcoming_vertex: v, incoming_vertex: down if down
+            Edge.create! outcoming_vertex: v, incoming_vertex: left if left
+            Edge.create! outcoming_vertex: v, incoming_vertex: right if right
+            Edge.create! outcoming_vertex: up, incoming_vertex: v if up
+            Edge.create! outcoming_vertex: down, incoming_vertex: v if down
+            Edge.create! outcoming_vertex: left, incoming_vertex: v if left
+            Edge.create! outcoming_vertex: right, incoming_vertex: v if right
+          end
+        end
+      end
+    end
   end
 
 end

@@ -20,9 +20,11 @@ class Edge
   field :reverse_on, default: false
   field :has_reverse, default: false
 
+  after_save :check_reverse
+
 
   def p_mid
-    reverse_on ? 200 : 300
+    reverse_on ? 300 : 200
   end
 
   def weight(attr)
@@ -44,5 +46,17 @@ class Edge
     (t_0*(1 + (business.to_f/p_mid)) ** 4).to_i
   end
 
+  private
+  def check_reverse
+    if business_changed?
+      if business > 400 && business-business_was >=  100 && has_reverse && !reverse_on
+        open_reverse
+      end
+    end
+  end
+
+  def open_reverse
+    update_attribute :reverse_on, true
+  end
 
 end
