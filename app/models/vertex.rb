@@ -13,7 +13,7 @@ class Vertex
   has_many   :routes_outlet, class_name: 'Route', inverse_of: :outlet
 
   def weight(attr)
-    try(attr)
+    try(attr) || 0
   end
 
   def children

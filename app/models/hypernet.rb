@@ -22,7 +22,10 @@ class Hypernet
   end
 
   def self.check_solution(n, m, k)
-    res = Array.new(m*n*k, 1)
+    res = []# Array.new(m*n*k, 1)
+    0.upto(n*m*k) do
+      res << Math.random(200)
+    end
     matmult( build_matrix(n,m,k), create_solution(n,m,k, res))
   end
 
@@ -56,7 +59,7 @@ class Hypernet
     res
   end
 
-  def self.dijkstra(v0, weight_function)
+  def self.dijkstra(v0,v1 = nil,  weight_function)
     vertices = Vertex.all.to_a
     ver_num = vertices.length
     vert_hash = Hash[vertices.map.with_index.to_a]
@@ -64,6 +67,7 @@ class Hypernet
     weights = Array.new(ver_num) {INFINITY}
     v0_num = vert_hash[v0]
     weights[v0_num] = 0
+    last_vert = Hash[vertices.map.with_index.to_a]
     for i in 0..ver_num-1
       min_weight = INFINITY
       min_weight_id = -1
@@ -77,12 +81,28 @@ class Hypernet
         v = e.incoming_vertex
         if weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function) < weights[vert_hash[v]]
           weights[vert_hash[v]] = weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function)
+          last_vert[vert_hash[v]] = min_weight_id
         end
       end
       vis[min_weight_id] = true
     end
-    return weights.each_with_index.map {|w, i| [w, vertices[i].id.to_s]}
+    edges = []
+    weights.each_with_index.map {|w, i| [w, vertices[i].id.to_s]}.each_slice(2) do |v1, v2|
+      if v1.present? && v2.present?
+        edges << Edge.where(incoming_vertex: v1[1], outcoming_vertex: v2[1]).first
+      end
+    end
+    if v1
+      vtemp = v1
+      path = []
+      while vtemp != v0 do
+        vtemp = Vertex.find last_vert[vtemp.id.to_s]
+        path << vtemp.id.to_s
+      end
+    end
+    path
   end
+
 
 
   def self.build_matrix(n, m, k)
@@ -140,11 +160,11 @@ class Hypernet
   end
 
 
-  def self.generate_net
+  def self.generate_net(n, m)
     Vertex.delete_all
     Edge.delete_all
-    1.upto(10) do |i|
-      1.upto(10) do |j|
+    1.upto(n) do |i|
+      1.upto(m) do |j|
        Vertex.create x: i *100,# + (Random.rand(5) - Random.rand(40)),
                      y: j * 100, #+ (Random.rand(5) - Random.rand(40))
                      simple_id: i*10 + j
