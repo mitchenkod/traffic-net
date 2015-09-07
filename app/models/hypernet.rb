@@ -67,7 +67,7 @@ class Hypernet
     weights = Array.new(ver_num) {INFINITY}
     v0_num = vert_hash[v0]
     weights[v0_num] = 0
-    last_vert = Hash[vertices.map.with_index.to_a]
+    last_vert = Array.new(ver_num)
     for i in 0..ver_num-1
       min_weight = INFINITY
       min_weight_id = -1
@@ -78,32 +78,56 @@ class Hypernet
         end
       end
       vertices[min_weight_id].outcoming_edges.each do |e|
-        v = e.incoming_vertex
-        if weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function) < weights[vert_hash[v]]
-          weights[vert_hash[v]] = weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function)
-          last_vert[vert_hash[v]] = min_weight_id
-        end
+        if e.enable
+          v = e.incoming_vertex
+          if weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function) < weights[vert_hash[v]]
+            weights[vert_hash[v]] = weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function)
+            last_vert[vert_hash[v]] = vertices[min_weight_id].id.to_s
+          end
+        endvertices[min_weight_id]
       end
       vis[min_weight_id] = true
     end
-    edges = []
-    weights.each_with_index.map {|w, i| [w, vertices[i].id.to_s]}.each_slice(2) do |v1, v2|
-      if v1.present? && v2.present?
-        edges << Edge.where(incoming_vertex: v1[1], outcoming_vertex: v2[1]).first
-      end
-    end
     if v1
+      Vertex.each {|vert| vert.update marked: false}
       vtemp = v1
-      path = []
+      vtemp.update marked: true
+      path = [v1]
       while vtemp != v0 do
-        vtemp = Vertex.find last_vert[vtemp.id.to_s]
+        vtemp = Vertex.find last_vert[vert_hash[vtemp]]
+        vtemp.update marked: true
         path << vtemp.id.to_s
       end
     end
-    path
+    res_edges = []
+    path.each_with_index do |v1, i|
+      if path[i+1].present?
+        res_edges << Edge.where(incoming_vertex: v1, outcoming_vertex: path[i+1]).first
+      end
+    end
+    res_edges
   end
 
-
+  def self.yen(v0, v1, k)
+    Route.delete_all
+    paths = dijkstra v0, v1, 'val'
+    source = Source.create vertex: v1
+    Route.create source: source, outlet: v1, edges: paths
+    1.upto(k) do
+      edge_temp = nil
+      min = INFINITY
+      paths.each do |edge|
+        if edge.val < min && edge.enable
+          min = edge.val
+          edge_temp = edge
+        end
+      end
+      edge_temp.update enable: false
+      paths = dijkstra v0, v1, 'val'
+      Route.create source: source, outlet: v1, edges: paths
+    end
+    Edge.each {|edge| edge.update enable: true}
+  end
 
   def self.build_matrix(n, m, k)
     matr = Array.new m+n-1
@@ -172,23 +196,25 @@ class Hypernet
     end
 
     Vertex.each do |v|
-      -1.upto(1) do |i|
-        -1.upto(1) do |j|
-          if i != 0 && j != 0
-            up = Vertex.where(simple_id: v.simple_id - 1).first
-            down = Vertex.where(simple_id: v.simple_id + 1).first
-            left = Vertex.where(simple_id: v.simple_id + 10).first
-            right = Vertex.where(simple_id: v.simple_id - 10).first
-            Edge.create! outcoming_vertex: v, incoming_vertex: up if up
-            Edge.create! outcoming_vertex: v, incoming_vertex: down if down
-            Edge.create! outcoming_vertex: v, incoming_vertex: left if left
-            Edge.create! outcoming_vertex: v, incoming_vertex: right if right
-            Edge.create! outcoming_vertex: up, incoming_vertex: v if up
-            Edge.create! outcoming_vertex: down, incoming_vertex: v if down
-            Edge.create! outcoming_vertex: left, incoming_vertex: v if left
-            Edge.create! outcoming_vertex: right, incoming_vertex: v if right
-          end
-        end
+      up = Vertex.where(simple_id: v.simple_id - 1).first
+      down = Vertex.where(simple_id: v.simple_id + 1).first
+      left = Vertex.where(simple_id: v.simple_id + 10).first
+      right = Vertex.where(simple_id: v.simple_id - 10).first
+      if up
+        Edge.create! outcoming_vertex: v, incoming_vertex: up if Edge.where(outcoming_vertex: v.id, incoming_vertex: up.id).first.nil?
+        Edge.create! outcoming_vertex: up, incoming_vertex: v if Edge.where(outcoming_vertex: up.id, incoming_vertex: v.id).first.nil?
+      end
+      if down
+        Edge.create! outcoming_vertex: v, incoming_vertex: down if Edge.where(outcoming_vertex: v.id, incoming_vertex: down.id).first.nil?
+        Edge.create! outcoming_vertex: down, incoming_vertex: v if Edge.where(outcoming_vertex: down.id, incoming_vertex: v.id).first.nil?
+      end
+      if left
+        Edge.create! outcoming_vertex: v, incoming_vertex: left if Edge.where(outcoming_vertex: v.id, incoming_vertex: left.id).first.nil?
+        Edge.create! outcoming_vertex: left, incoming_vertex: v if Edge.where(outcomirng_vertex: left.id, incoming_vertex: v.id).first.nil?
+      end
+      if right
+        Edge.create! outcoming_vertex: v, incoming_vertex: right if Edge.where(outcoming_vertex: v.id, incoming_vertex: right.id).first.nil?
+        Edge.create! outcoming_vertex: right, incoming_vertex: v if Edge.where(outcoming_vertex: right.id, incoming_vertex: v.id).first.nil?
       end
     end
   end

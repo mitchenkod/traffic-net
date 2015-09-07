@@ -9,7 +9,8 @@ module Api
             id: vert.id.to_s,
             x: vert.x,
             y: vert.y,
-            simple_id: vert.simple_id
+            simple_id: vert.simple_id,
+            marked: vert.marked
 
         }
       end

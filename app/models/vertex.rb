@@ -5,6 +5,7 @@ class Vertex
   field :y,    type: Float
   field :val
   field :simple_id, type: Integer
+  field :marked, default: false
 
   has_many :outcoming_edges, class_name: 'Edge', inverse_of: :outcoming_vertex
   has_many :incoming_edges,  class_name: 'Edge', inverse_of: :incoming_vertex

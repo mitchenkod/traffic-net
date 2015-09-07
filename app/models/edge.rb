@@ -19,6 +19,7 @@ class Edge
 
   field :reverse_on, default: false
   field :has_reverse, default: false
+  field :enable, default: true
 
   after_save :check_reverse
 

@@ -22,7 +22,7 @@ class @GraphController
       dataType: 'json'
       success: (vertices)=>
         for vertex in vertices
-          @vertices.push {id: vertex.id, x: vertex.x, y: vertex.y, simple_id: vertex.simple_id}
+          @vertices.push {id: vertex.id, x: vertex.x, y: vertex.y, simple_id: vertex.simple_id, marked: vertex.marked}
     $.ajax
       async: false
       url: 'api/edges'
@@ -53,9 +53,10 @@ class @GraphController
     @init_net()
 
 
-  draw_vertex: (x, y, simple_id) ->
+  draw_vertex: (x, y, simple_id, marked) ->
     @canvas.beginPath()
     @canvas.arc x, y, 5, 0, 2 * Math.PI, false
+    @canvas.arc(x, y, 10, 0, 2 * Math.PI, false)if marked
     @canvas.fillText(simple_id, x+10, y+10,  50);
     @canvas.stroke()
 
@@ -75,7 +76,7 @@ class @GraphController
 
   init_net: ->
     for vertex in @vertices
-      @draw_vertex(vertex.x, vertex.y, vertex.simple_id)
+      @draw_vertex(vertex.x, vertex.y, vertex.simple_id, vertex.marked)
     for edge in @edges
 #      if edge.visible
       @draw_edge edge.x_1, edge.y_1, edge.x_2, edge.y_2, edge.t, edge.flow_state, edge.business
