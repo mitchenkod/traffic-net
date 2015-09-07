@@ -1,6 +1,60 @@
 class Hypernet
 
+  require 'matrix'
+
   INFINITY = 1 << 32
+
+  k = 2
+  n = 3
+  m = 3
+
+
+  def self.matmult(a, b)
+    res = []
+    a.each do |line|
+      sum = 0
+      line.each_with_index do |elem, i|
+        sum += elem * b[i]
+      end
+      res << sum
+    end
+    res
+  end
+
+  def self.check_solution(n, m, k)
+    res = Array.new(m*n*k, 1)
+    matmult( build_matrix(n,m,k), create_solution(n,m,k, res))
+  end
+
+  def self.create_solution(n, m, k, res)
+    c = Array.new(m + n -1 , 20)
+    #
+    0.upto(m-2) do |j|
+      other = 0
+      1.upto(k-1) do |l|
+        other += res[j*k + l]
+      end
+      1.upto(n-1) do |i|
+        0.upto(k-1) do |l|
+          other += res[j*k + i*k*m]
+        end
+      end
+      res[j*k] = c[n + j] - other
+    end
+    0.upto(n-1) do |i|
+      sum = 0
+      0.upto(m-2) do |j|
+        0.upto(k-1) do |l|
+          sum += res[i*k*m + j*k + l]
+        end
+      end
+      0.upto(k-2) do |l|
+        sum += res[i*k*m + (m-1)*k + l]
+      end
+      res[(i+1)*k*m -1] = c[i] - sum
+    end
+    res
+  end
 
   def self.dijkstra(v0, weight_function)
     vertices = Vertex.all.to_a
@@ -31,6 +85,36 @@ class Hypernet
   end
 
 
+  def self.build_matrix(n, m, k)
+    matr = Array.new m+n-1
+    0.upto(n-1) do |i|
+      matr[i] = Array.new(m*n*k, 0)
+      0.upto(m-1) do |j|
+        0.upto(k-1) do |l|
+          matr[i][i*m*k + j*k + l] = 1
+        end
+      end
+    end
+    0.upto(m-2) do |j|
+      matr[n+j] = Array.new(m*n*k, 0)
+      0.upto(n-1) do |i|
+        0.upto(k-1) do |l|
+          matr[n+j][k*j + k*m*i + l] = 1
+        end
+      end
+    end
+    matr
+  end
+
+  def self.print_matrix(n,m,k)
+    build_matrix(n,m,k).each do |line|
+      out_line = ""
+      line.each do |elem|
+       out_line += "#{elem} "
+      end
+      puts out_line
+    end
+  end
   def self.clean_up_routes
     Edge.each {|edge| edge.update_attribute :business, 0}
     Source.each {|source| source.update_attribute :current_flow, source.incoming_flow}
@@ -57,10 +141,12 @@ class Hypernet
 
 
   def self.generate_net
+    Vertex.delete_all
+    Edge.delete_all
     1.upto(10) do |i|
       1.upto(10) do |j|
-       Vertex.create x: i * 50,# + (Random.rand(5) - Random.rand(40)),
-                     y: j * 50, #+ (Random.rand(5) - Random.rand(40))
+       Vertex.create x: i *100,# + (Random.rand(5) - Random.rand(40)),
+                     y: j * 100, #+ (Random.rand(5) - Random.rand(40))
                      simple_id: i*10 + j
       end
     end
@@ -69,10 +155,10 @@ class Hypernet
       -1.upto(1) do |i|
         -1.upto(1) do |j|
           if i != 0 && j != 0
-            up = Vertex.find_by simple_id: v.simple_id - 1 if v.simple_id % 10 != 1
-            down = Vertex.find_by simple_id: v.simple_id + 1 if v.simple_id % 10 != 0
-            left = Vertex.find_by simple_id: v.simple_id + 10 if v.simple_id < 100
-            right = Vertex.find_by simple_id: v.simple_id - 10 if v.simple_id > 20
+            up = Vertex.where(simple_id: v.simple_id - 1).first
+            down = Vertex.where(simple_id: v.simple_id + 1).first
+            left = Vertex.where(simple_id: v.simple_id + 10).first
+            right = Vertex.where(simple_id: v.simple_id - 10).first
             Edge.create! outcoming_vertex: v, incoming_vertex: up if up
             Edge.create! outcoming_vertex: v, incoming_vertex: down if down
             Edge.create! outcoming_vertex: v, incoming_vertex: left if left
