@@ -84,7 +84,8 @@ class Hypernet
             weights[vert_hash[v]] = weights[min_weight_id] + e.weight(weight_function) + v.weight(weight_function)
             last_vert[vert_hash[v]] = vertices[min_weight_id].id.to_s
           end
-        endvertices[min_weight_id]
+        end
+        vertices[min_weight_id]
       end
       vis[min_weight_id] = true
     end
@@ -93,10 +94,14 @@ class Hypernet
       vtemp = v1
       vtemp.update marked: true
       path = [v1]
-      while vtemp != v0 do
+      res = while vtemp != v0 do
+        return nil if last_vert[vert_hash[vtemp]].nil?
         vtemp = Vertex.find last_vert[vert_hash[vtemp]]
         vtemp.update marked: true
         path << vtemp.id.to_s
+      end
+      if res == -1
+        return nil
       end
     end
     res_edges = []
@@ -109,27 +114,37 @@ class Hypernet
   end
 
   def self.yen(v0, v1, k)
+    Edge.each {|edge| edge.update enable: true}
     Route.delete_all
-    paths = dijkstra v0, v1, 'val'
+    paths = dijkstra(v0, v1, 'val') || path
+    paths_new = []
     source = Source.create vertex: v1
     Route.create source: source, outlet: v1, edges: paths
     1.upto(k) do
       edge_temp = nil
       min = INFINITY
+      path_new = nil
       paths.each do |edge|
-        if edge.val < min && edge.enable
-          min = edge.val
+        edge.update enable: false
+        temp = dijkstra(v0, v1, 'val')
+        if temp.present?
+          paths_new = temp
           edge_temp = edge
         end
+        edge.update enable: true
       end
       edge_temp.update enable: false
-      paths = dijkstra v0, v1, 'val'
-      Route.create source: source, outlet: v1, edges: paths
+      if paths_new.present?
+        paths = paths_new
+        Route.create source: source, outlet: v1, edges: paths
+      end
     end
-    Edge.each {|edge| edge.update enable: true}
   end
 
   def self.build_matrix(n, m, k)
+
+
+
     matr = Array.new m+n-1
     0.upto(n-1) do |i|
       matr[i] = Array.new(m*n*k, 0)
