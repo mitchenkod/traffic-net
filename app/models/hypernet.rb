@@ -24,13 +24,13 @@ class Hypernet
   def self.check_solution(n, m, k)
     res = []# Array.new(m*n*k, 1)
     0.upto(n*m*k) do
-      res << Math.random(200)
+      res << Math.send('rand', 200)
     end
     matmult( build_matrix(n,m,k), create_solution(n,m,k, res))
   end
 
   def self.create_solution(n, m, k, res)
-    c = Array.new(m + n -1 , 20)
+    c = Array.new(m + n -1 , 5)
     #
     0.upto(m-2) do |j|
       other = 0
@@ -113,12 +113,23 @@ class Hypernet
     res_edges
   end
 
+  def self.generate_routes(sources, outlets)
+    Route.delete_all
+    sources.each do |source_id|
+      outlets.each do |outlet_id|
+        source = Vertex.find_by simple_id: source_id
+        outlet = Vertex.find_by simple_id: outlet_id
+        yen(source, outlet, 1)
+      end
+    end
+
+  end
+
   def self.yen(v0, v1, k)
     Edge.each {|edge| edge.update enable: true}
-    Route.delete_all
     paths = dijkstra(v0, v1, 'val') || path
     paths_new = []
-    source = Source.create vertex: v1
+    source = Source.find_or_create_by vertex: v1.id
     Route.create source: source, outlet: v1, edges: paths
     1.upto(k) do
       edge_temp = nil
@@ -141,9 +152,42 @@ class Hypernet
     end
   end
 
+  def self.apply_solution
+    min_costs = INFINITY
+    final_sol = []
+    1.upto(5) do |i|
+      1.upto(5) do |j|
+        1.upto(5) do |k|
+          1.upto(5) do |l|
+            1.upto(5) do |m|
+              clean_up_routes
+              sol = create_solution(2, 2, 2, [1, i, j, 1, k, l, m, 1])
+              valid = true
+              sol.each_with_index do |flow, i|
+                if flow > 0
+                  Route.all[i].add_flow(flow)
+                else
+                  valid = false
+                end
+              end
+              puts "#{i} #{j} #{k} #{l} #{m} #{costs}"
+              if valid
+
+                temp = costs
+                if min_costs > temp
+                  min_costs = temp
+                  final_sol = sol
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+    [min_costs, final_sol]
+  end
+
   def self.build_matrix(n, m, k)
-
-
 
     matr = Array.new m+n-1
     0.upto(n-1) do |i|
@@ -181,8 +225,8 @@ class Hypernet
   end
 
   def self.costs
-    flow_rate = Source.all.inject(0) {|sum, source| sum + source.incoming_flow}
-    Edge.all.inject(0) {|sum, edge| sum + edge.t_res*edge.business }/flow_rate
+    # flow_rate = Source.all.inject(0) {|sum, source| sum + source.incoming_flow}
+    Edge.all.inject(0) {|sum, edge| sum + edge.t_res }
   end
 
 
@@ -192,10 +236,11 @@ class Hypernet
 
 
   def self.compute_final_state
-    (1..40).each do |n|
-      self.iterate_flows(10)
+    clean_up_routes
+    (1..100).each do |n|
+      self.iterate_flows(1)
     end
-    self.iterate_flows(300)
+    # self.iterate_flows(300)
   end
 
 

@@ -24,9 +24,9 @@ class Edge
   after_save :check_reverse
 
 
-  def p_mid
-    reverse_on ? 300 : 200
-  end
+  # def p_mid
+  #   reverse_on ? 300 : 200
+  # end
 
   def weight(attr)
     try(attr) || 0

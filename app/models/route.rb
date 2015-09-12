@@ -8,7 +8,7 @@ class Route
 
   def add_flow(rate)
     edges.each do |edge|
-      edge.update_attribute :business, edge.business + rate
+      edge.update_attribute :business, (edge.business||0) + rate
     end
   end
 
