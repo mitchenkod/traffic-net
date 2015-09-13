@@ -214,6 +214,7 @@ class Hypernet
   end
 
   def self.solve_genetic(p_num)
+    time_start = Time.now
     n = 2
     m = 2
     k = 2
@@ -224,20 +225,32 @@ class Hypernet
       population << sol
       fitness << count_fitness(n, m, k, sol)
     end
-    puts fitness.inject(INFINITY) {|f, min| [f,min].min }
-    1.upto(100) do
+    before_min = fitness.inject(INFINITY) {|f, min| [f,min].min }
+    puts before_min
+    strike = 0
+    while strike < 5
       new_fitness = []
       population = new_population n, m, k, population, fitness, p_num
       population.each do |ind|
         new_fitness << count_fitness(n, m, k, ind)
       end
-      puts new_fitness.inject(INFINITY) {|f, min| [f,min].min }
+      min = new_fitness.inject(INFINITY) {|f, min| [f,min].min }
+      puts min
       fitness = new_fitness
+      if (before_min - min).abs.to_f / before_min < 0.0001
+        strike += 1
+      else
+        strike = 0
+        before_min = min
+      end
     end
-    population
+    time_finish = Time.now
+    # population
+    time_finish - time_start
   end
 
   def self.apply_solution
+    time_start = Time.now
     min_costs = INFINITY
     final_sol = []
     1.upto(5) do |i|
@@ -270,6 +283,9 @@ class Hypernet
       end
     end
     [min_costs, final_sol]
+    time_finish = Time.now
+    # population
+    time_finish - time_start
   end
 
   def self.build_matrix(n, m, k)
@@ -327,9 +343,13 @@ class Hypernet
 
   def self.compute_final_state
     clean_up_routes
+    time_start = Time.now
     (1..100).each do |n|
       self.iterate_flows(1)
     end
+    time_finish = Time.now
+    # population
+    time_finish - time_start
     # self.iterate_flows(300)
   end
 
