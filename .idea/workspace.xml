@@ -16,7 +16,7 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/traffic-net@Api__EdgesController_create__traffic_net.coverage" NAME="Api::EdgesController#create: traffic-net Coverage Results" MODIFIED="1420625943886" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
-    <SUITE FILE_PATH="coverage/traffic-net@Rails_console__traffic_net.coverage" NAME="Rails console: traffic-net Coverage Results" MODIFIED="1442141055088" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
+    <SUITE FILE_PATH="coverage/traffic-net@Rails_console__traffic_net.coverage" NAME="Rails console: traffic-net Coverage Results" MODIFIED="1442157158749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
     <SUITE FILE_PATH="coverage/traffic-net@neo4j_install_edition_version___traffic_net.coverage" NAME="neo4j:install[edition,version]: traffic-net Coverage Results" MODIFIED="1420373665143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
     <SUITE FILE_PATH="coverage/traffic-net@Hypernet_dijkstra_first_example_right_weights__traffic_net.coverage" NAME="Hypernet#dijkstra first example right weights: traffic-net Coverage Results" MODIFIED="1420629003890" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
     <SUITE FILE_PATH="coverage/traffic-net@Api__VerticesController__traffic_net.coverage" NAME="Api::VerticesController: traffic-net Coverage Results" MODIFIED="1420471638658" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="traffic-net" />
@@ -97,9 +97,11 @@
       <file leaf-file-name="hypernet.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/models/hypernet.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3943662">
-              <caret line="163" column="36" selection-start-line="163" selection-start-column="36" selection-end-line="163" selection-end-column="36" />
-              <folding />
+            <state vertical-scroll-proportion="0.5555556">
+              <caret line="327" column="30" selection-start-line="327" selection-start-column="11" selection-end-line="327" selection-end-column="30" />
+              <folding>
+                <marker date="1442157119994" expanded="true" signature="4547:4685" placeholder="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -666,16 +668,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1301" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42569658" sideWeight="0.49880478" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5108359" sideWeight="0.49880478" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972136" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988048" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24940239" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27968127" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5139319" sideWeight="0.80876493" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38080496" sideWeight="0.80796814" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27968127" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34055728" sideWeight="0.80876493" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.72136223" sideWeight="0.80796814" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41021672" sideWeight="0.19203188" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -723,16 +725,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="223" />
+      <option name="time" value="255" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="IrbRunConfigurationType">
-        <watch expression="j*k" />
-        <watch expression="(i+1)*k*m -1" />
-        <watch expression="sol.inject{|x, prod| x ==0 ? prod : x*prod}" />
-        <watch expression="x" language="ruby" />
-        <watch expression="prod" />
-        <watch expression="x &lt; 0 || prod &lt; 0 ? -1 : 1" />
+        <watch expression="cross-1" language="ruby" />
+        <watch expression="len-1" />
+        <watch expression="(rand &lt; 5 ? parent_one[0,cross] : parent_two[0,cross])" />
+        <watch expression="res[cross+1, len-1] = (rand &gt; 5 ? parent_one[cross+1, len-1] : parent_two[cross+1, len-1])" />
       </configuration>
     </watches-manager>
   </component>
@@ -1097,9 +1097,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/hypernet.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3943662">
-          <caret line="163" column="36" selection-start-line="163" selection-start-column="36" selection-end-line="163" selection-end-column="36" />
-          <folding />
+        <state vertical-scroll-proportion="0.5555556">
+          <caret line="327" column="30" selection-start-line="327" selection-start-column="11" selection-end-line="327" selection-end-column="30" />
+          <folding>
+            <marker date="1442157119994" expanded="true" signature="4547:4685" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

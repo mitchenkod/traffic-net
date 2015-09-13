@@ -30,7 +30,7 @@ class Hypernet
   end
 
   def self.create_solution(n, m, k, res)
-    c = Array.new(m + n -1 , 5)
+    c = Array.new(m + n -1 , 100)
     #
     0.upto(m-2) do |j|
       other = 0
@@ -157,34 +157,50 @@ class Hypernet
     while prod < 0
       res = []
       1.upto(n*m*k) do
-        res << Math.send('rand', 5)
+        res << Math.send('rand', 100)
       end
       sol = create_solution n, m, k, res
       prod = 1
-      sol.each {|x| prod = -1 if x<0}
+      sol.each {|x| prod = -1 if x<=0}
       prod
     end
     sol
   end
 
-  def self.owl_buying(parent_one, parent_two)
-    res = []
-    parent_one.each_with_index do |parent, i|
-      res << (parent_one[i] + parent_two[i])/2
+
+  def self.owl_buying(n, m, k, parent_one, parent_two)
+
+    len = parent_one.length
+    rand = Random.new.rand 10
+    res = Array.new len
+    cross = Random.new.rand(len - 3) + 1
+    res[0,cross] = (rand < 5 ? parent_one[0,cross] : parent_two[0,cross])
+    res[cross, len-1] = (rand > 5 ? parent_one[cross, len-1] : parent_two[cross, len-1])
+    before_mutation = create_solution n, m, k, res
+    if Random.new.rand(100) < 50
+      1.upto(Random.new.rand(len/2).to_i) do
+        i = (Random.new.rand m*n*k).to_i
+        res[i] = (Random.new.rand 50).to_i
+      end
     end
+    prod = 1
+    res = create_solution(n, m, k, res)
+    res.each {|x| prod = -1 if x<=0}
+    prod
+    res = before_mutation if prod < 0
     res
   end
 
-  def self.new_population(population, fitness, p_num)
+  def self.new_population(n, m, k, population, fitness, p_num)
     res = []
     1.upto(p_num) do
-      i = (Math.send 'rand', population.length).to_i
-      j = (Math.send 'rand', population.length).to_i
-      k = (Math.send 'rand', population.length).to_i
-      l = (Math.send 'rand', population.length).to_i
+      i = (Random.new.rand population.length).to_i
+      j = (Random.new.rand population.length).to_i
+      q = (Random.new.rand population.length).to_i
+      l = (Random.new.rand population.length).to_i
       child_i = fitness[i] < fitness[j] ? i : j
-      child_j = fitness[k] < fitness[l] ? k : l
-      res << (owl_buying population[child_i], population[child_j])
+      child_j = fitness[q] < fitness[l] ? q : l
+      res << (owl_buying n, m, k,  population[child_i], population[child_j])
     end
     res
   end
@@ -200,7 +216,7 @@ class Hypernet
   def self.solve_genetic(p_num)
     n = 2
     m = 2
-    k = 1
+    k = 2
     population = []
     fitness = []
     1.upto(p_num) do
@@ -208,10 +224,10 @@ class Hypernet
       population << sol
       fitness << count_fitness(n, m, k, sol)
     end
-    puts fitness.inject {|f, sum| f+sum }/fitness.length
-    1.upto(10) do
+    puts fitness.inject(INFINITY) {|f, min| [f,min].min }
+    1.upto(100) do
       new_fitness = []
-      population = new_population population, fitness, p_num
+      population = new_population n, m, k, population, fitness, p_num
       population.each do |ind|
         new_fitness << count_fitness(n, m, k, ind)
       end
@@ -287,6 +303,11 @@ class Hypernet
       puts out_line
     end
   end
+
+  def self.load_up_sources
+    Source.each {|source| source.update_attribute :incoming_flow, 100}
+  end
+
   def self.clean_up_routes
     Edge.each {|edge| edge.update_attribute :business, 0}
     Source.each {|source| source.update_attribute :current_flow, source.incoming_flow}
