@@ -152,6 +152,75 @@ class Hypernet
     end
   end
 
+  def self.create_individual(n, m, k)
+    prod = -1
+    while prod < 0
+      res = []
+      1.upto(n*m*k) do
+        res << Math.send('rand', 5)
+      end
+      sol = create_solution n, m, k, res
+      prod = 1
+      sol.each {|x| prod = -1 if x<0}
+      prod
+    end
+    sol
+  end
+
+  def self.owl_buying(parent_one, parent_two)
+    res = []
+    parent_one.each_with_index do |parent, i|
+      res << (parent_one[i] + parent_two[i])/2
+    end
+    res
+  end
+
+  def self.new_population(population, fitness, p_num)
+    res = []
+    1.upto(p_num) do
+      i = (Math.send 'rand', population.length).to_i
+      j = (Math.send 'rand', population.length).to_i
+      k = (Math.send 'rand', population.length).to_i
+      l = (Math.send 'rand', population.length).to_i
+      child_i = fitness[i] < fitness[j] ? i : j
+      child_j = fitness[k] < fitness[l] ? k : l
+      res << (owl_buying population[child_i], population[child_j])
+    end
+    res
+  end
+
+  def self.count_fitness(n, m, k, res)
+    clean_up_routes
+    res.each_with_index do |flow, i|
+      Route.all[i].add_flow(flow)
+    end
+    costs
+  end
+
+  def self.solve_genetic(p_num)
+    n = 2
+    m = 2
+    k = 1
+    population = []
+    fitness = []
+    1.upto(p_num) do
+      sol = create_individual(2,2,2)
+      population << sol
+      fitness << count_fitness(n, m, k, sol)
+    end
+    puts fitness.inject {|f, sum| f+sum }/fitness.length
+    1.upto(10) do
+      new_fitness = []
+      population = new_population population, fitness, p_num
+      population.each do |ind|
+        new_fitness << count_fitness(n, m, k, ind)
+      end
+      puts new_fitness.inject(INFINITY) {|f, min| [f,min].min }
+      fitness = new_fitness
+    end
+    population
+  end
+
   def self.apply_solution
     min_costs = INFINITY
     final_sol = []
