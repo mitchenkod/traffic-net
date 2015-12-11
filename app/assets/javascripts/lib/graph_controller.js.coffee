@@ -11,8 +11,8 @@ class @GraphController
   constructor: ->
     $('#net_here').click @new_vertex
     c=document.getElementById("net_here");
-    c.width = 900
-    c.height = 600
+    c.width = 1200
+    c.height = 900
     ctx=c.getContext("2d");
     @canvas = ctx
     $.ajax

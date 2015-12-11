@@ -13,8 +13,8 @@ class Source
   field :current_flow, default: 0
 
   def min_route
-    res = nil
-    min = INFINITY
+    res = routes.first
+    min = res.t
     routes.each do |route|
       possible_min = route.t
       if possible_min < min

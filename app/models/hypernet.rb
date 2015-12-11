@@ -115,11 +115,14 @@ class Hypernet
 
   def self.generate_routes(sources, outlets)
     Route.delete_all
+    i = 0
     sources.each do |source_id|
       outlets.each do |outlet_id|
         source = Vertex.find_by simple_id: source_id
         outlet = Vertex.find_by simple_id: outlet_id
-        yen(source, outlet, 1)
+        yen(source, outlet, 10)
+        puts i
+        i += 1
       end
     end
 
@@ -129,7 +132,7 @@ class Hypernet
     Edge.each {|edge| edge.update enable: true}
     paths = dijkstra(v0, v1, 'val') || path
     paths_new = []
-    source = Source.find_or_create_by vertex: v1.id
+    source = Source.find_or_create_by vertex: v0.id
     Route.create source: source, outlet: v1, edges: paths
     1.upto(k) do
       edge_temp = nil
@@ -144,7 +147,7 @@ class Hypernet
         end
         edge.update enable: true
       end
-      edge_temp.update enable: false
+      edge_temp.update enable: false if edge_temp
       if paths_new.present?
         paths = paths_new
         Route.create source: source, outlet: v1, edges: paths
@@ -346,6 +349,7 @@ class Hypernet
     time_start = Time.now
     (1..100).each do |n|
       self.iterate_flows(1)
+      puts n
     end
     time_finish = Time.now
     # population
@@ -354,37 +358,58 @@ class Hypernet
   end
 
 
+  def self.create_sources(sources)
+    sources.each do |source|
+      vertex = Vertex.where(simple_id: source).first
+      Source.create! vertex: vertex, incoming_flow: 50
+    end
+  end
+
+
+  def self.create_outlets(sources)
+    sources.each do |source|
+      vertex = Vertex.where(simple_id: source).first
+      Source.create! vertex: vertex, incoming_flow: 50
+    end
+  end
+
   def self.generate_net(n, m)
     Vertex.delete_all
     Edge.delete_all
     1.upto(n) do |i|
       1.upto(m) do |j|
-       Vertex.create x: i *100,# + (Random.rand(5) - Random.rand(40)),
-                     y: j * 100, #+ (Random.rand(5) - Random.rand(40))
-                     simple_id: i*10 + j
+       Vertex.create x: i * 50 + (Random.rand(20) - Random.rand(40)),
+                     y: j * 50 + (Random.rand(20) - Random.rand(40)),
+                     simple_id: i*100 + j
       end
     end
 
     Vertex.each do |v|
       up = Vertex.where(simple_id: v.simple_id - 1).first
       down = Vertex.where(simple_id: v.simple_id + 1).first
-      left = Vertex.where(simple_id: v.simple_id + 10).first
-      right = Vertex.where(simple_id: v.simple_id - 10).first
-      if up
+      left = Vertex.where(simple_id: v.simple_id + 100).first
+      right = Vertex.where(simple_id: v.simple_id - 100).first
+      rand = Math.send('rand', 100)
+      if up && rand < 50
         Edge.create! outcoming_vertex: v, incoming_vertex: up if Edge.where(outcoming_vertex: v.id, incoming_vertex: up.id).first.nil?
         Edge.create! outcoming_vertex: up, incoming_vertex: v if Edge.where(outcoming_vertex: up.id, incoming_vertex: v.id).first.nil?
       end
-      if down
+      if down && rand < 50
         Edge.create! outcoming_vertex: v, incoming_vertex: down if Edge.where(outcoming_vertex: v.id, incoming_vertex: down.id).first.nil?
         Edge.create! outcoming_vertex: down, incoming_vertex: v if Edge.where(outcoming_vertex: down.id, incoming_vertex: v.id).first.nil?
       end
-      if left
+      if left && rand < 50
         Edge.create! outcoming_vertex: v, incoming_vertex: left if Edge.where(outcoming_vertex: v.id, incoming_vertex: left.id).first.nil?
         Edge.create! outcoming_vertex: left, incoming_vertex: v if Edge.where(outcomirng_vertex: left.id, incoming_vertex: v.id).first.nil?
       end
-      if right
+      if right && rand < 50
         Edge.create! outcoming_vertex: v, incoming_vertex: right if Edge.where(outcoming_vertex: v.id, incoming_vertex: right.id).first.nil?
         Edge.create! outcoming_vertex: right, incoming_vertex: v if Edge.where(outcoming_vertex: right.id, incoming_vertex: v.id).first.nil?
+      end
+    end
+    Vertex.each do |v|
+      if Edge.where(outcoming_vertex: v.id).count == 0 && Edge.where(incoming_vertex: v.id).count == 0
+        v.destroy!
       end
     end
   end

@@ -1,7 +1,7 @@
-source 'https://rubygems.org'
+source (ENV['RAILS_ENV'] == 'test' ? 'https://rubygems.org' : 'https://ruby.taobao.org/')
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.8'
+gem 'rails', '~>4.2.0'
 
 gem 'mongoid', '~>4.0.0'
 
@@ -33,6 +33,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+
 group :test do
   gem 'capybara', '~> 2.3.0'
   gem 'rspec-rails', '~> 3.0.0'
@@ -41,6 +42,8 @@ group :test do
   gem 'cucumber-rails', require: false
   gem 'selenium-webdriver'
 end
+
+gem 'responders', '~> 2.0'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
