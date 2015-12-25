@@ -1,4 +1,4 @@
-source (ENV['RAILS_ENV'] == 'test' ? 'https://rubygems.org' : 'https://ruby.taobao.org/')
+source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~>4.2.0'

@@ -24,7 +24,7 @@ class Hypernet
   def self.check_solution(n, m, k)
     res = []# Array.new(m*n*k, 1)
     0.upto(n*m*k) do
-      res << Math.send('rand', 200)
+      res << Math.send('rand', 5)
     end
     matmult( build_matrix(n,m,k), create_solution(n,m,k, res))
   end
@@ -39,7 +39,7 @@ class Hypernet
       end
       1.upto(n-1) do |i|
         0.upto(k-1) do |l|
-          other += res[j*k + i*k*m]
+          other += res[j*k + i*k*m + l]
         end
       end
       res[j*k] = c[n + j] - other
@@ -120,11 +120,17 @@ class Hypernet
       outlets.each do |outlet_id|
         source = Vertex.find_by simple_id: source_id
         outlet = Vertex.find_by simple_id: outlet_id
-        yen(source, outlet, 10)
+        yen(source, outlet, 5)
         puts i
         i += 1
       end
     end
+
+  end
+
+  def connected(v0, v1)
+
+
 
   end
 
@@ -160,11 +166,11 @@ class Hypernet
     while prod < 0
       res = []
       1.upto(n*m*k) do
-        res << Math.send('rand', 100)
+        res << Math.send('rand', 10)
       end
       sol = create_solution n, m, k, res
       prod = 1
-      sol.each {|x| prod = -1 if x<=0}
+      sol.each {|x| prod = -1 if x<0}
       prod
     end
     sol
@@ -218,13 +224,13 @@ class Hypernet
 
   def self.solve_genetic(p_num)
     time_start = Time.now
-    n = 2
-    m = 2
-    k = 2
+    n = 10 #source number
+    m = 10 #outlets number
+    k = 5 #path number
     population = []
     fitness = []
     1.upto(p_num) do
-      sol = create_individual(2,2,2)
+      sol = create_individual(n,m,k)
       population << sol
       fitness << count_fitness(n, m, k, sol)
     end
@@ -310,7 +316,11 @@ class Hypernet
         end
       end
     end
-    matr
+    matr.each do |row|
+      str_row = ''
+      row.each {|elem| str_row += "#{elem} "}
+      puts str_row
+    end
   end
 
   def self.print_matrix(n,m,k)
@@ -332,7 +342,7 @@ class Hypernet
     Source.each {|source| source.update_attribute :current_flow, source.incoming_flow}
     Edge.where(reverse_on: true).each {|edge| edge.update_attribute :reverse_on, false}
   end
-
+  #1156618052817
   def self.costs
     # flow_rate = Source.all.inject(0) {|sum, source| sum + source.incoming_flow}
     Edge.all.inject(0) {|sum, edge| sum + edge.t_res }
