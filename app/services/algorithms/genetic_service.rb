@@ -1,6 +1,8 @@
 module Algorithms
   class GeneticService
 
+    INFINITY = 1 << 32
+
     def solve(p_num)
       time_start = Time.now
       n = 10 #source number
@@ -50,7 +52,6 @@ module Algorithms
     end
 
     def self.owl_buying(n, m, k, parent_one, parent_two)
-
       len = parent_one.length
       rand = Random.new.rand 10
       res = Array.new len
@@ -87,16 +88,35 @@ module Algorithms
     end
 
     def self.count_fitness(n, m, k, res)
-      clean_up_routes
-      res.each_with_index do |flow, i|
-        Route.all[i].add_flow(flow)
+      Hypernet.clean_up_routes
+      routes_t = []
+      Hypernet.non_zero_routes.each_with_index do |route, i|
+        routes_t = []
+        0.upto(k-1) do |j|
+          arr = res.slice (i*k)..(i+1)*k - 1
+          arr.sort!
+          last_elem = 0
+          new_elem = 0
+          arr.each do |elem|
+            new_elem = elem.to_i
+            routes_t << new_elem - last_elem
+            last_elem = new_elem
+          end
+        end
+        Route.where(source: route[0], outlet: route[1]).each_with_index do |route, i|
+          route.add_flow(routes_t[i])
+        end
+
       end
-      costs
+      Hypernet.costs
     end
 
   end
 
   def create_solution
-
+    n = 5
+    m = 5
+    k = 5
+    create_individual n,m,k
   end
 end

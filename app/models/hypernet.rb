@@ -10,13 +10,13 @@ class Hypernet
 
 
   def self.sources
-    Source.all.map(:vertex)
+    Source.all.distinct(:id)
   end
 
   def self.outlets
     res = []
     Route.each do |route|
-      res << route.outlet unless res.include?(route.outlet)
+      res << route.outlet.id unless res.include?(route.outlet)
     end
     res
   end
