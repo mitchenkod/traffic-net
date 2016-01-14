@@ -1,0 +1,1 @@
+{ "options" : { "create" : "order_applications" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.order_applications", "name" : "_id_" } ] }

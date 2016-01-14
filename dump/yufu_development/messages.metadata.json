@@ -1,0 +1,1 @@
+{ "options" : { "create" : "messages" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.messages", "name" : "_id_" } ] }

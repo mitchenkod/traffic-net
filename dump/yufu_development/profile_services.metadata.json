@@ -1,0 +1,1 @@
+{ "options" : { "create" : "profile_services" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.profile_services", "name" : "_id_" } ] }

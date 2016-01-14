@@ -1,0 +1,1 @@
+{ "options" : { "create" : "report_bases" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.report_bases", "name" : "_id_" } ] }

@@ -1,0 +1,1 @@
+{ "options" : { "create" : "visacom_services" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.visacom_services", "name" : "_id_" } ] }

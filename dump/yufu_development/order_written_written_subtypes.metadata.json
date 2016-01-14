@@ -1,0 +1,1 @@
+{ "options" : { "create" : "order_written_written_subtypes" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.order_written_written_subtypes", "name" : "_id_" } ] }

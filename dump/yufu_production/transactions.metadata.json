@@ -1,0 +1,1 @@
+{ "options" : { "create" : "transactions" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.transactions", "name" : "_id_" } ] }

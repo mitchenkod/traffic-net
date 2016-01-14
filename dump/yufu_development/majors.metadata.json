@@ -1,0 +1,1 @@
+{ "options" : { "create" : "majors" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.majors", "name" : "_id_" } ] }

@@ -1,0 +1,1 @@
+{ "options" : { "create" : "order_verbal_translators_queues" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.order_verbal_translators_queues", "name" : "_id_" } ] }

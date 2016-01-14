@@ -12,18 +12,6 @@ class Source
 
   field :current_flow, default: 0
 
-  def min_route
-    res = routes.first
-    min = res.t
-    routes.each do |route|
-      possible_min = route.t
-      if possible_min < min
-        res = route
-        min = possible_min
-      end
-    end
-    res
-  end
 
   def increase_flow(rate)
     if (current_flow||0) - rate >= 0

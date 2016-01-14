@@ -1,0 +1,1 @@
+{ "options" : { "create" : "translations_dumps" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.translations_dumps", "name" : "_id_" } ] }

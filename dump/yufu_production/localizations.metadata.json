@@ -1,0 +1,1 @@
+{ "options" : { "create" : "localizations" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.localizations", "name" : "_id_" } ] }

@@ -1,0 +1,1 @@
+{ "options" : { "create" : "visacom_page_texts" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.visacom_page_texts", "name" : "_id_" } ] }

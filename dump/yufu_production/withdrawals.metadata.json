@@ -1,0 +1,1 @@
+{ "options" : { "create" : "withdrawals" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.withdrawals", "name" : "_id_" } ] }

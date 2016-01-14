@@ -64,8 +64,8 @@ class @GraphController
     @canvas.beginPath()
     @canvas.moveTo x_1, y_1
     @canvas.lineTo x_2, y_2
-    @canvas.fillText(value, (x_1+x_2)/2, (y_1+y_2)/2,  50);
-    @canvas.fillText(business, (x_1+x_2)/2-10, (y_1+y_2)/2+10,  50);
+#    @canvas.fillText(value, (x_1+x_2)/2, (y_1+y_2)/2,  50);
+#    @canvas.fillText(business, (x_1+x_2)/2-10, (y_1+y_2)/2+10,  50);
     switch state
       when 'free' then color = '#00FF00'
       when 'congested' then color = '#FFCC00'

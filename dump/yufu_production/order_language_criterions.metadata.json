@@ -1,0 +1,1 @@
+{ "options" : { "create" : "order_language_criterions" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.order_language_criterions", "name" : "_id_" } ] }

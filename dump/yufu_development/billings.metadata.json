@@ -1,0 +1,1 @@
+{ "options" : { "create" : "billings" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.billings", "name" : "_id_" } ] }

@@ -1,0 +1,1 @@
+{ "options" : { "create" : "referral_links" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.referral_links", "name" : "_id_" } ] }

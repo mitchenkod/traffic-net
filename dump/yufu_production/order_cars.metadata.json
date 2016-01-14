@@ -1,0 +1,1 @@
+{ "options" : { "create" : "order_cars" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.order_cars", "name" : "_id_" } ] }

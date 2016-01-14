@@ -1,0 +1,1 @@
+{ "options" : { "create" : "faq_questions" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.faq_questions", "name" : "_id_" } ] }

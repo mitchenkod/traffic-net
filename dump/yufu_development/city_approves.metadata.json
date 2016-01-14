@@ -1,0 +1,1 @@
+{ "options" : { "create" : "city_approves" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.city_approves", "name" : "_id_" } ] }

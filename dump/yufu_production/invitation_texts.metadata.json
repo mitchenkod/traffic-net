@@ -1,0 +1,1 @@
+{ "options" : { "create" : "invitation_texts" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.invitation_texts", "name" : "_id_" } ] }

@@ -41,12 +41,24 @@ class Hypernet
     matmult( build_matrix(n,m,k), create_solution(n,m,k, res))
   end
 
+
+  def self.incoming_flow
+    20
+  end
+
   def self.rho
-    [[10, 0, 10, 0, 10],
-     [10, 0, 10, 0, 10],
-     [10, 0, 10, 0, 10],
-     [10, 0, 10, 0, 10],
-     [10, 0, 10, 0, 10]]
+    [[incoming_flow, 0, incoming_flow, 0, incoming_flow],
+     [incoming_flow, 0, 0, incoming_flow, incoming_flow],
+     [incoming_flow, 0, incoming_flow, 0, incoming_flow],
+     [0, 0, incoming_flow, 0, incoming_flow],
+     [incoming_flow, 0, incoming_flow, 0, incoming_flow]]
+    # [[10, 10, 0, 10],
+    # [10, 10, 10, 10 ],
+    #  [10, 0, 10, 10],
+    #  [10, 10, 0, 10 ]]
+
+
+
   end
 
   def self.non_zero_routes
@@ -147,12 +159,13 @@ class Hypernet
 
   def self.generate_routes(sources, outlets)
     Route.delete_all
+    Source.delete_all
     i = 0
     sources.each do |source_id|
       outlets.each do |outlet_id|
         source = Vertex.find_by simple_id: source_id
         outlet = Vertex.find_by simple_id: outlet_id
-        yen(source, outlet, 5)
+        yen(source, outlet, 4)
         puts i
         i += 1
       end
@@ -294,16 +307,40 @@ class Hypernet
   end
 
 
+  def self.min_route(collection)
+    res = collection.first
+    min = res.t
+    collection.each do |route|
+      possible_min = route.t
+      if possible_min < min
+        res = route
+        min = possible_min
+      end
+    end
+    res
+  end
+
   def self.compute_final_state
     clean_up_routes
     time_start = Time.now
-    (1..100).each do |n|
-      self.iterate_flows(1)
-      puts n
+    temp_rho = rho
+    1.upto(incoming_flow) do
+      temp_rho.each_with_index do |raw, i|
+        raw.each_with_index do |elem, j|
+          if temp_rho[i][j] > 0
+            temp_rho[i][j] -= 1
+            min_route(Route.where(source: Source.find(sources[i]), outlet: Vertex.find(outlets[j]))).add_flow(1)
+          end
+        end
+      end
     end
+    # (1..100).each do |n|
+    #   self.iterate_flows(1)
+    #   puts n
+    # end
     time_finish = Time.now
     # population
-    time_finish - time_start
+    [costs, time_finish - time_start]
     # self.iterate_flows(300)
   end
 

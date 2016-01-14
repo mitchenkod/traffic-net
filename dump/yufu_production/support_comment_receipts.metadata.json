@@ -1,0 +1,1 @@
+{ "options" : { "create" : "support_comment_receipts" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_production.support_comment_receipts", "name" : "_id_" } ] }

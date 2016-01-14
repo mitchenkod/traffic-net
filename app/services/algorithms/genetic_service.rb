@@ -1,7 +1,5 @@
 module Algorithms
-  class GeneticService
-
-    INFINITY = 1 << 32
+  class GeneticService < BaseService
 
     def solve(p_num)
       time_start = Time.now
@@ -10,24 +8,31 @@ module Algorithms
       k = 5 #path number
       population = []
       fitness = []
+      res = []
+      iter_count = 0
       1.upto(p_num) do
-        sol = create_individual(n,m,k)
+        sol = create_individual(k)
         population << sol
-        fitness << count_fitness(n, m, k, sol)
+        fitness << count_fitness(k, sol)
       end
       before_min = fitness.inject(INFINITY) {|f, min| [f,min].min }
       puts before_min
       strike = 0
-      while strike < 5
+      while strike < 4
+        iter_count += 1
         new_fitness = []
         population = new_population n, m, k, population, fitness, p_num
+        # puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         population.each do |ind|
-          new_fitness << count_fitness(n, m, k, ind)
+          new_fitness << count_fitness( k, ind)
+          # puts ind.inject('') {|elem, sum| elem + ' ' + sum}
         end
+        # puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         min = new_fitness.inject(INFINITY) {|f, min| [f,min].min }
-        puts min
+        res << min
+        # puts min
         fitness = new_fitness
-        if (before_min - min).abs.to_f / before_min < 0.0001
+        if (before_min - min).abs.to_f / before_min < 0.001
           strike += 1
         else
           strike = 0
@@ -36,14 +41,14 @@ module Algorithms
       end
       time_finish = Time.now
       # population
-      time_finish - time_start
+      [res.min, time_finish - time_start, iter_count]
     end
 
-    def create_individual(n, m, k)
+    def create_individual(k)
       res = []
       Hypernet.non_zero_routes.each do |route|
-        0.upto(k-1) do |i|
-          gen = Math.send('rand', route[2]+1)
+        0.upto(k-2) do |i|
+          gen = Random.rand route[2]+1
           res << "#{gen}" if gen >= 10
           res << "0#{gen}" if gen < 10
         end
@@ -51,35 +56,31 @@ module Algorithms
       res
     end
 
-    def self.owl_buying(n, m, k, parent_one, parent_two)
+    def owl_buying(n, m, k, parent_one, parent_two)
       len = parent_one.length
-      rand = Random.new.rand 10
+      rand = Random.rand Hypernet.incoming_flow
       res = Array.new len
-      cross = Random.new.rand(len - 3) + 1
+      cross = Random.new.rand(len) - 1
+      cross = 1 if cross <= 0
       res[0,cross] = (rand < 5 ? parent_one[0,cross] : parent_two[0,cross])
       res[cross, len-1] = (rand > 5 ? parent_one[cross, len-1] : parent_two[cross, len-1])
-      before_mutation = create_solution n, m, k, res
-      if Random.new.rand(100) < 50
-        1.upto(Random.new.rand(len/2).to_i) do
-          i = (Random.new.rand m*n*k).to_i
-          res[i] = (Random.new.rand 50).to_i
+      if Random.rand(100) < 50
+        1.upto(Random.rand(len/2).to_i) do
+          i = (Random.rand len).to_i
+          res[i] = (Random.rand Hypernet.incoming_flow).to_i.to_s
+          res[i] = "0#{res[i]}" if res[i].length == 1
         end
       end
-      prod = 1
-      res = create_solution(n, m, k, res)
-      res.each {|x| prod = -1 if x<=0}
-      prod
-      res = before_mutation if prod < 0
       res
     end
 
-    def self.new_population(n, m, k, population, fitness, p_num)
+    def new_population(n, m, k, population, fitness, p_num)
       res = []
       1.upto(p_num) do
-        i = (Random.new.rand population.length).to_i
-        j = (Random.new.rand population.length).to_i
-        q = (Random.new.rand population.length).to_i
-        l = (Random.new.rand population.length).to_i
+        i = (Random.rand population.length).to_i
+        j = (Random.rand population.length).to_i
+        q = (Random.rand population.length).to_i
+        l = (Random.rand population.length).to_i
         child_i = fitness[i] < fitness[j] ? i : j
         child_j = fitness[q] < fitness[l] ? q : l
         res << (owl_buying n, m, k,  population[child_i], population[child_j])
@@ -87,36 +88,21 @@ module Algorithms
       res
     end
 
-    def self.count_fitness(n, m, k, res)
-      Hypernet.clean_up_routes
-      routes_t = []
-      Hypernet.non_zero_routes.each_with_index do |route, i|
-        routes_t = []
-        0.upto(k-1) do |j|
-          arr = res.slice (i*k)..(i+1)*k - 1
-          arr.sort!
-          last_elem = 0
-          new_elem = 0
-          arr.each do |elem|
-            new_elem = elem.to_i
-            routes_t << new_elem - last_elem
-            last_elem = new_elem
-          end
-        end
-        Route.where(source: route[0], outlet: route[1]).each_with_index do |route, i|
-          route.add_flow(routes_t[i])
-        end
-
+    def results(p_num, len)
+      time = 0
+      res = 0
+      iter = 0
+      1.upto len do |i|
+        puts i
+        temp_res = solve(p_num)
+        res += temp_res[0]
+        time += temp_res[1]
+        iter += temp_res[2]
       end
-      Hypernet.costs
+      [res.to_f/len, time/len, iter.to_f/len]
     end
 
   end
 
-  def create_solution
-    n = 5
-    m = 5
-    k = 5
-    create_individual n,m,k
-  end
+
 end

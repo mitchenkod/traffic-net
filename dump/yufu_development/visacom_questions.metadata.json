@@ -1,0 +1,1 @@
+{ "options" : { "create" : "visacom_questions" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.visacom_questions", "name" : "_id_" } ] }

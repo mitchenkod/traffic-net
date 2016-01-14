@@ -1,0 +1,1 @@
+{ "options" : { "create" : "sequences" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.sequences", "name" : "_id_" } ] }

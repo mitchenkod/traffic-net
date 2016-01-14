@@ -1,0 +1,1 @@
+{ "options" : { "create" : "profile_level_up_requests" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.profile_level_up_requests", "name" : "_id_" } ] }

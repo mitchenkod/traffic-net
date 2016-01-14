@@ -28,6 +28,11 @@ class Edge
   #   reverse_on ? 300 : 200
   # end
 
+  def p_mid
+    100
+  end
+
+
   def weight(attr)
     try(attr) || 0
   end
@@ -44,7 +49,7 @@ class Edge
   end
 
   def t_res
-    (t_0*(1 + (business.to_f/p_mid)) ** 4).to_i
+    business == 0 ? 0 : (t_0*(1 + (business.to_f/p_mid)) ** 4).to_i
   end
 
   private

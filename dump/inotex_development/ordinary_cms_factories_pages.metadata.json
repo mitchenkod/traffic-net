@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "inotex_development.ordinary_cms_factories_pages", "name" : "_id_" } ] }

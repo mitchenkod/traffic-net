@@ -1,0 +1,1 @@
+{ "options" : { "create" : "department_bases" }, "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "yufu_development.department_bases", "name" : "_id_" } ] }
